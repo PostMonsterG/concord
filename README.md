@@ -10,6 +10,12 @@ Concord is the core component of <a href="http://littleoutliner.com/">Little Out
 
 Concord's native file format is <a href="http://dev.opml.org/">OPML</a>.
 
+
+### About this fork
+
+This is basically "hello, world".
+
+
 ### What's new?
 
 You can see the work notes <a href="https://github.com/scripting/concord/blob/master/worknotes.md">here</a>. 
