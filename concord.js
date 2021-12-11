@@ -223,7 +223,6 @@ var ConcordUtil = {
 			"meta-V": "paste",
 			"meta-X": "cut",
 			"meta-Z": "undo",
-			"meta-Y": "redo",
 
 			"meta-[": "promote",
 			"meta-]": "demote",
@@ -2651,31 +2650,7 @@ function ConcordOp(root, concordInstance, _cursor) {
 		return false;
 		};
 	this.redo = function(){
-		var stateBeforeChange = root.children().clone(true, true);
-		var textModeBeforeChange = this.inTextMode();
-		var beforeRange = undefined;
-		if(this.inTextMode()){
-			var range = concordInstance.editor.getSelection();
-			if(range){
-				beforeRange = range.cloneRange();
-				}
-			}
-		if(root.data("change")){
-			root.empty();
-			root.data("change").appendTo(root);
-			this.setTextMode(root.data("changeTextMode"));
-			if(this.inTextMode()){
-				this.focusCursor();
-				var range = root.data("changeRange");
-				if(range){
-					concordInstance.editor.restoreSelection(range);
-					}
-				}
-			root.data("change", stateBeforeChange);
-			root.data("changeTextMode", textModeBeforeChange);
-			root.data("changeRange", beforeRange);
-			return true;
-			}
+		ConcordUtil.speakerBeep ();
 		return false;
 		};		
 	this.visitLevel = function(cb){
@@ -3324,7 +3299,11 @@ function Op(opmltext){
 				case "undo":
 					keyCaptured=true;
 					event.preventDefault();
-					concordInstance.op.undo();
+					if(event.shiftKey) {
+						concordInstance.op.redo();
+					} else {
+						concordInstance.op.undo();
+					}
 					break;
 				case "cut":
 					if(concordInstance.op.inTextMode()){
