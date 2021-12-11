@@ -606,8 +606,10 @@ function ConcordEditor(root, concordInstance) {
 		if(root.data("dragging")) {
 			concordInstance.op.markChanged();
 			var undoStack = root.data("undoStack") || [];
-			var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
-			undoStack.length = undoStackPointer;			
+			var undoStackPointer = root.data("undoStackPointer");
+			if (undoStackPointer !== undefined) {
+				undoStack.length = undoStackPointer;			
+				}				
 			undoStack.push({
 				"change": root.data("draggingChange"),
 				"changeTextMode": false
@@ -2417,8 +2419,10 @@ function ConcordOp(root, concordInstance, _cursor) {
 					}
 				}
 		var undoStack = root.data("undoStack") || [];
-		var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
-		undoStack.length = undoStackPointer;			
+		var undoStackPointer = root.data("undoStackPointer");
+		if (undoStackPointer !== undefined) {
+			undoStack.length = undoStackPointer;			
+			} 
 		undoStack.push(undoChange);
 		root.data("undoStack", undoStack);
 		root.data("undoStackPointer", undefined);
@@ -2641,13 +2645,15 @@ function ConcordOp(root, concordInstance, _cursor) {
 				beforeRange = range.cloneRange();
 				}
 			}
+		// we truncate the undo stack at the pointer when adding new actions. it points to the action we will redo
+		// so we want the state before that
 		var undoStack = root.data("undoStack") || [];
 		var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
 		var undoChange;
-		console.log("hey guess what, we have an undoStack and it is is " + undoStack);
-		if (undoStack.length > 0 && undoStackPointer > -1 && undoStackPointer <= undoStack.length) {
+		if (undoStack.length > 0 && undoStackPointer > 0 && undoStackPointer <= undoStack.length) {
+			undoStackPointer--;
 			undoChange = undoStack[undoStackPointer];
-			root.data("undoStackPointer", undoStackPointer - 1);	
+			root.data("undoStackPointer", undoStackPointer);	
 			root.empty();
 			undoChange["change"].appendTo(root);
 			this.setTextMode(undoChange["changeTextMode"]);
@@ -2667,8 +2673,8 @@ function ConcordOp(root, concordInstance, _cursor) {
 		};		
 	this.redo2 = function(){
 		var undoStack = root.data("undoStack") || [];
-		var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
-		if (undoStack.length > 0 && undoStackPointer > -1 && undoStackPointer < undoStack.length) {
+		var undoStackPointer = root.data("undoStackPointer");
+		if (undoStack.length > 0 && undoStackPointer !== undefined && undoStackPointer > -1 && undoStackPointer < undoStack.length - 1) {
 			undoStackPointer++;
 			undoChange = undoStack[undoStackPointer];
 			root.data("undoStackPointer", undoStackPointer);	
