@@ -2656,7 +2656,7 @@ function ConcordOp(root, concordInstance, _cursor) {
 			root.data("undochange", {
 				"change": stateBeforeChange,
 				"changeTextMode": textModeBeforeChange,
-				"changeRange", beforeRange
+				"changeRange": beforeRange
 				});
 			return true;
 			}
