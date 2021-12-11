@@ -2670,7 +2670,7 @@ function ConcordOp(root, concordInstance, _cursor) {
 		if (undoStack.length > 0 && undoStackPointer > -1 && undoStackPointer < undoStack.length) {
 			undoStackPointer++;
 			undoChange = undoStack.at(undoStackPointer);
-			root.data("undoStackPointer", undoStackPointer;	
+			root.data("undoStackPointer", undoStackPointer);	
 			root.empty();
 			undoChange["change"].appendTo(root);
 			this.setTextMode(undoChange["changeTextMode"]);
