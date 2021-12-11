@@ -2411,7 +2411,7 @@ function ConcordOp(root, concordInstance, _cursor) {
 		var undoChange = {
 			"change": root.children().clone(true, true),
 			"changeTextMode": this.inTextMode()
-		};
+			};
 		if(this.inTextMode()){
 			var range = concordInstance.editor.getSelection();
 			if( range){
@@ -2651,8 +2651,8 @@ function ConcordOp(root, concordInstance, _cursor) {
 		var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
 		var undoChange;
 		if (undoStack.length > 0 && undoStackPointer > 0 && undoStackPointer <= undoStack.length) {
-			undoStackPointer--;
 			undoChange = undoStack[undoStackPointer];
+			undoStackPointer--;
 			root.data("undoStackPointer", undoStackPointer);	
 			root.empty();
 			undoChange["change"].appendTo(root);
@@ -2675,8 +2675,8 @@ function ConcordOp(root, concordInstance, _cursor) {
 		var undoStack = root.data("undoStack") || [];
 		var undoStackPointer = root.data("undoStackPointer");
 		if (undoStack.length > 0 && undoStackPointer !== undefined && undoStackPointer > -1 && undoStackPointer < undoStack.length - 1) {
-			undoStackPointer++;
 			undoChange = undoStack[undoStackPointer];
+			undoStackPointer++;
 			root.data("undoStackPointer", undoStackPointer);	
 			root.empty();
 			undoChange["change"].appendTo(root);
