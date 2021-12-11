@@ -2641,8 +2641,10 @@ function ConcordOp(root, concordInstance, _cursor) {
 				beforeRange = range.cloneRange();
 				}
 			}
-		var undoStack = root.data("undoStack") || [];
-		var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
+		var undoStack = root.data("undoStack");
+		if (undoStack === undefined) { undoStack = [] };
+		var undoStackPointer = root.data("undoStackPointer");
+		if (undoStackPointer === undefined) { undoStackPointer =  undoStack.length; }
 		var undoChange;
 		if (undoStack.length > 0 && undoStackPointer > -1 && undoStackPointer <= undoStack.length) {
 			undoChange = undoStack.at(undoStackPointer);
@@ -2665,8 +2667,10 @@ function ConcordOp(root, concordInstance, _cursor) {
 		return this.undo();
 		};		
 	this.redo2 = function(){
-		var undoStack = root.data("undoStack") || [];
-		var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
+		var undoStack = root.data("undoStack");
+		if (undoStack === undefined) { undoStack = [] };
+		var undoStackPointer = root.data("undoStackPointer");
+		if (undoStackPointer === undefined) { undoStackPointer =  undoStack.length; }
 		if (undoStack.length > 0 && undoStackPointer > -1 && undoStackPointer < undoStack.length) {
 			undoStackPointer++;
 			undoChange = undoStack.at(undoStackPointer);
