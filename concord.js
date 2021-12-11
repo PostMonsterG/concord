@@ -22,7 +22,7 @@ if (!Array.prototype.indexOf) {
 		}
 	}
 var concord = {
-	version: "3.0.5",
+	version: "3.0.5gfa",
 	mobile: /Android|webOS|iPhone|iPad|iPod|BlackBerry/i.test(navigator.userAgent),
 	ready: false,
 	handleEvents: true,
@@ -3312,7 +3312,11 @@ function Op(opmltext){
 				case "redo":
 					keyCaptured=true;
 					event.preventDefault();
-					concordInstance.op.redo1();
+					if (event.shiftKey) {
+						concordInstance.op.redo2();
+					} else {
+						concordInstance.op.redo1();
+					}
 					break;
 					case "cut":
 					if(concordInstance.op.inTextMode()){
