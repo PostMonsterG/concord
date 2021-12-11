@@ -222,8 +222,7 @@ var ConcordUtil = {
 			"meta-U": "reorg-up",
 			"meta-V": "paste",
 			"meta-X": "cut",
-			"meta-Z": "undo",
-			"meta-M": "redo",
+			"meta-Z": "redo",
 
 			"meta-[": "promote",
 			"meta-]": "demote",
@@ -2650,11 +2649,16 @@ function ConcordOp(root, concordInstance, _cursor) {
 			}
 		return false;
 		};
-		this.redo = function(){
+		this.redo1 = function(){
 		
 			return this.undo();
 			};		
-				
+		this.redo2 = function(){
+		
+			return this.undo();
+
+		return true;
+		};		
 	this.visitLevel = function(cb){
 		var cursor = this.getCursor();
 		var op = this;
@@ -3305,8 +3309,12 @@ function Op(opmltext){
 					break;
 				case "redo":
 					keyCaptured=true;
-					event.preventDefault();					 
-					concordInstance.op.redo();					
+					event.preventDefault();
+					if (event.shiftKey) {
+						concordInstance.op.redo2();
+					} else {
+						concordInstance.op.redo1();
+					}
 					break;
 					case "cut":
 					if(concordInstance.op.inTextMode()){
