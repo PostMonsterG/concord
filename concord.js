@@ -216,14 +216,13 @@ var ConcordUtil = {
 			"meta-C": "copy",
 			"meta-D": "reorg-down",
 			"meta-F": "find", //9/19/13 by DW
-			"meta-I": "italicize",
+			"meta-Z": "italicize",
 			"meta-L": "reorg-left",
 			"meta-R": "reorg-right",
 			"meta-U": "reorg-up",
 			"meta-V": "paste",
 			"meta-X": "cut",
-			"meta-Z": "undo",
-			"meta-J": "redo",
+			"meta-I": "undo",
 
 			"meta-[": "promote",
 			"meta-]": "demote",
@@ -2654,7 +2653,7 @@ function ConcordOp(root, concordInstance, _cursor) {
 		
 		concordInstance.op.reorg(right);
 
-		return false;
+		return true;
 		};		
 	this.visitLevel = function(cb){
 		var cursor = this.getCursor();
