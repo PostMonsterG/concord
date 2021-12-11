@@ -2650,7 +2650,9 @@ function ConcordOp(root, concordInstance, _cursor) {
 		return false;
 		};
 	this.redo = function(){
-		ConcordUtil.speakerBeep ();
+		
+		concordInstance.op.reorg(right);
+		
 		return false;
 		};		
 	this.visitLevel = function(cb){
