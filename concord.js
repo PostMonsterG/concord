@@ -222,7 +222,7 @@ var ConcordUtil = {
 			"meta-U": "reorg-up",
 			"meta-V": "paste",
 			"meta-X": "cut",
-			"meta-Z": "redo",
+			"meta-Z": "undo",
 
 			"meta-[": "promote",
 			"meta-]": "demote",
@@ -2667,11 +2667,8 @@ function ConcordOp(root, concordInstance, _cursor) {
 			return true;
 			}
 		return false;
-		};
-	this.redo1 = function(){
-		return this.undo();
 		};		
-	this.redo2 = function(){
+	this.redo = function(){
 		var undoStack = root.data("undoStack") || [];
 		var undoStackPointer = root.data("undoStackPointer");
 		if (undoStack.length > 0 && undoStackPointer !== undefined && undoStackPointer > -1 && undoStackPointer < undoStack.length - 1) {
@@ -3337,17 +3334,12 @@ function Op(opmltext){
 					break;
 				case "undo":
 					keyCaptured=true;
-					event.preventDefault();
-					concordInstance.op.undo();
-					break;
-				case "redo":
-					keyCaptured=true;
-					event.preventDefault();
+					event.preventDefault();				
 					if (event.shiftKey) {
-						concordInstance.op.redo2();
+						concordInstance.op.redo();
 					} else {
-						concordInstance.op.redo1();
-					}
+						concordInstance.op.undo();
+						}
 					break;
 					case "cut":
 					if(concordInstance.op.inTextMode()){
