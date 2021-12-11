@@ -2653,7 +2653,7 @@ function ConcordOp(root, concordInstance, _cursor) {
 					concordInstance.editor.restoreSelection(range);
 					}
 				}
-			root.data("undochange", {
+			root.data("undoChange", {
 				"change": stateBeforeChange,
 				"changeTextMode": textModeBeforeChange,
 				"changeRange": beforeRange
