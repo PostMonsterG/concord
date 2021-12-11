@@ -2644,6 +2644,7 @@ function ConcordOp(root, concordInstance, _cursor) {
 		var undoStack = root.data("undoStack") || [];
 		var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
 		var undoChange;
+		console.log("hey guess what, we have an undoStack and it is is " + undoStack);
 		if (undoStack.length > 0 && undoStackPointer > -1 && undoStackPointer <= undoStack.length) {
 			undoChange = undoStack[undoStackPointer];
 			root.data("undoStackPointer", undoStackPointer - 1);	
