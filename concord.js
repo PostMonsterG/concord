@@ -605,10 +605,14 @@ function ConcordEditor(root, concordInstance) {
 	this.dragModeExit = function() {
 		if(root.data("dragging")) {
 			concordInstance.op.markChanged();
-			root.data("change", root.data("draggingChange"));
-			root.data("changeTextMode", false);
-			root.data("changeRange", undefined);
-			}
+			// root.data("change", root.data("draggingChange"));
+			// root.data("changeTextMode", false);
+			// root.data("changeRange", undefined);
+			root.data("undoChange", {
+				"change": root.data("draggingChange"),
+				"changeTextMode": false
+			});
+		}
 		root.find(".draggable").removeClass("draggable");
 		root.find(".drop-sibling").removeClass("drop-sibling");
 		root.find(".drop-child").removeClass("drop-child");
@@ -2400,18 +2404,24 @@ function ConcordOp(root, concordInstance, _cursor) {
 		this.go("left", 1);
 		};
 	this.saveState = function(){
-		root.data("change", root.children().clone(true, true));
-		root.data("changeTextMode", this.inTextMode());
+		var undoChange = {
+			"change": root.children().clone(true, true),
+			"changeTextMode": this.inTextMode()
+		};
+		// root.data("change", root.children().clone(true, true));
+		// root.data("changeTextMode", this.inTextMode());
 		if(this.inTextMode()){
 			var range = concordInstance.editor.getSelection();
 			if( range){
-				root.data("changeRange",range.cloneRange());
+				// root.data("changeRange",range.cloneRange());
+				undoChange["changeRange"] = range.cloneRange();
 				}else{
-					root.data("changeRange", undefined);
+					// root.data("changeRange", undefined);
 					}
 			}else{
-				root.data("changeRange", undefined);
+				// root.data("changeRange", undefined);
 				}
+		root.data("undoChange", undoChange);
 		return true;
 		};
 	this.setCursor = function(node, multiple, multipleRange){
@@ -2631,20 +2641,23 @@ function ConcordOp(root, concordInstance, _cursor) {
 				beforeRange = range.cloneRange();
 				}
 			}
-		if(root.data("change")){
+		var undoChange = root.data("undoChange");
+		if(undoChange !== undefined && undoChange["change"]){
 			root.empty();
-			root.data("change").appendTo(root);
-			this.setTextMode(root.data("changeTextMode"));
+			undoChange["change"].appendTo(root);
+			this.setTextMode(undoChange["changeTextMode"]);
 			if(this.inTextMode()){
 				this.focusCursor();
-				var range = root.data("changeRange");
+				var range = undoChange["changeRange"];
 				if(range){
 					concordInstance.editor.restoreSelection(range);
 					}
 				}
-			root.data("change", stateBeforeChange);
-			root.data("changeTextMode", textModeBeforeChange);
-			root.data("changeRange", beforeRange);
+			root.data("undochange", {
+				"change": stateBeforeChange,
+				"changeTextMode": textModeBeforeChange,
+				"changeRange", beforeRange
+				});
 			return true;
 			}
 		return false;
