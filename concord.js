@@ -2416,7 +2416,7 @@ function ConcordOp(root, concordInstance, _cursor) {
 				undoChange["changeRange"] = range.cloneRange();
 					}
 				}
-		var undoStack = root.data("undoStack") || [];
+		var undoStack = root.data("undoStack") || new Array();
 		var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
 		undoStack.length = undoStackPointer;			
 		undoStack.push(undoChange);
@@ -2641,11 +2641,8 @@ function ConcordOp(root, concordInstance, _cursor) {
 				beforeRange = range.cloneRange();
 				}
 			}
-		var undoStack = root.data("undoStack");
-		if (undoStack === undefined) { undoStack = [] };
-		var undoStackPointer = root.data("undoStackPointer");
-		if (undoStackPointer === undefined) {undoStackPointer =  undoStack.length;
-
+		var undoStack = root.data("undoStack") || new Array();
+		var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
 		var undoChange;
 		if (undoStack.length > 0 && undoStackPointer > -1 && undoStackPointer <= undoStack.length) {
 			undoChange = undoStack.at(undoStackPointer);
