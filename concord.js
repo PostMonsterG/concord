@@ -2645,15 +2645,11 @@ function ConcordOp(root, concordInstance, _cursor) {
 				beforeRange = range.cloneRange();
 				}
 			}
-		// we truncate the undo stack at the pointer when adding new actions. it points to the action we will redo
-		// so we want the state before that
 		var undoStack = root.data("undoStack") || [];
-		var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
-		var undoChange;
-		if (undoStack.length > 0 && undoStackPointer > 0 && undoStackPointer <= undoStack.length) {
-			undoChange = undoStack[undoStackPointer];
-			undoStackPointer--;
-			root.data("undoStackPointer", undoStackPointer);	
+		var undoStackPointer = root.data("undoStackPointer") || undoStack.length - 1;
+		if (undoStack.length > 0 && undoStackPointer >= 0) {
+			var undoChange = undoStack[undoStackPointer];
+			root.data("undoStackPointer", undoStackPointer - 1);	
 			root.empty();
 			undoChange["change"].appendTo(root);
 			this.setTextMode(undoChange["changeTextMode"]);
@@ -2671,16 +2667,15 @@ function ConcordOp(root, concordInstance, _cursor) {
 	this.redo = function(){
 		var undoStack = root.data("undoStack") || [];
 		var undoStackPointer = root.data("undoStackPointer");
-		if (undoStack.length > 0 && undoStackPointer !== undefined && undoStackPointer > -1 && undoStackPointer < undoStack.length - 1) {
-			undoChange = undoStack[undoStackPointer];
-			undoStackPointer++;
-			root.data("undoStackPointer", undoStackPointer);	
+		if (undoStack.length > 0 && undoStackPointer !== undefined && undoStackPointer < undoStack.length - 1) {
+			var redoChange = undoStack[undoStackPointer];
+			root.data("undoStackPointer", undoStackPointer + 1);	
 			root.empty();
-			undoChange["change"].appendTo(root);
-			this.setTextMode(undoChange["changeTextMode"]);
+			redoChange["change"].appendTo(root);
+			this.setTextMode(redoChange["changeTextMode"]);
 			if(this.inTextMode()){
 				this.focusCursor();
-				var range = undoChange["changeRange"];
+				var range = redoChange["changeRange"];
 				if(range){
 					concordInstance.editor.restoreSelection(range);
 					}
