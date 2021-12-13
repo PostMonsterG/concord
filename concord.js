@@ -2646,41 +2646,46 @@ function ConcordOp(root, concordInstance, _cursor) {
 				}
 			}
 		var undoStack = root.data("undoStack") || [];
-		var undoStackPointer = root.data("undoStackPointer") || undoStack.length - 1;
-		if (undoStack.length > 0 && undoStackPointer >= 0) {
-			var undoChange = undoStack[undoStackPointer];
-			root.data("undoStackPointer", undoStackPointer - 1);	
-			root.empty();
-			undoChange["change"].appendTo(root);
-			this.setTextMode(undoChange["changeTextMode"]);
-			if(this.inTextMode()){
-				this.focusCursor();
-				var range = undoChange["changeRange"];
-				if(range){
-					concordInstance.editor.restoreSelection(range);
+		if (undoStack.length > 0) {
+			var undoStackPointer = root.data("undoStackPointer") || undoStack.length;
+			if (undoStackPointer > 0) {
+				undoStackPointer--;
+				var undoChange = undoStack[undoStackPointer];
+				root.data("undoStackPointer", undoStackPointer);	
+				root.empty();
+				undoChange["change"].appendTo(root);
+				this.setTextMode(undoChange["changeTextMode"]);
+				if(this.inTextMode()){
+					this.focusCursor();
+					var range = undoChange["changeRange"];
+					if(range){
+						concordInstance.editor.restoreSelection(range);
+						}
 					}
+				return true;
 				}
-			return true;
 			}
 		return false;
 		};		
 	this.redo = function(){
 		var undoStack = root.data("undoStack") || [];
-		var undoStackPointer = root.data("undoStackPointer");
-		if (undoStack.length > 0 && undoStackPointer !== undefined && undoStackPointer < undoStack.length - 1) {
-			var redoChange = undoStack[undoStackPointer];
-			root.data("undoStackPointer", undoStackPointer + 1);	
-			root.empty();
-			redoChange["change"].appendTo(root);
-			this.setTextMode(redoChange["changeTextMode"]);
-			if(this.inTextMode()){
-				this.focusCursor();
-				var range = redoChange["changeRange"];
-				if(range){
-					concordInstance.editor.restoreSelection(range);
+		if (undoStack.length > 0) {
+			var undoStackPointer = root.data("undoStackPointer");
+			if (undoStackPointer !== undefined && undoStackPointer < undoStack.length) {
+				var redoChange = undoStack[undoStackPointer];
+				root.data("undoStackPointer", undoStackPointer + 1);	
+				root.empty();
+				redoChange["change"].appendTo(root);
+				this.setTextMode(redoChange["changeTextMode"]);
+				if(this.inTextMode()){
+					this.focusCursor();
+					var range = redoChange["changeRange"];
+					if(range){
+						concordInstance.editor.restoreSelection(range);
+						}
 					}
+				return true;
 				}
-			return true;
 			}
 		return false;
 		};		
